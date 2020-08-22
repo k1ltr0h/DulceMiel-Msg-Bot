@@ -18,14 +18,10 @@ client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 # este es el número de testeo de Twilio sandbox sandboxtfrom_whatsapp_number='whatsapp:+14155238886'
 # reemplace este número con su numero personal de whastapp
 #to_whatsapp_number='whatsapp:+15005550006'
-client.messages.create(body='Algo ha cambiado o.o, revisa la página!',
-                      from_=TWILIO_WSP,
-                      to=MY_WSP)
 
 mixer.init()
 dj = mixer.music
-
-dj.load('Super_Mario_Land_Ending.mp3')
+#dj.load('Super_Mario_Land_Ending.mp3')
 #wait = vlc.MediaPlayer("Super_Mario_Land_Ending.mp3")
 
 r = requests.get('https://www.dulcemiel.com')
@@ -47,12 +43,18 @@ while True:
 			client.messages.create(body='Algo ha cambiado o.o, revisa la página!',
                       from_=TWILIO_WSP,
                       to=MY_WSP)
+			dj.load('Super_Mario_Land_Ending.mp3')
 			dj.play()
 	except:
 		print("Algo raro pasó o.o, revisa la pag! o presionaste Ctrl+c para salir e.e")
-		client.messages.create(body='Revisa la página!, si no ves nada nuevo, quizá se ha caído la red o algún problema con el Bot. Pero tranquila, se volverá a activar en 1 minuto.',
-                      from_=TWILIO_WSP,
-                      to=MY_WSP)
+		dj.load('were-ready-master_im-not-ready.mp3')
+		dj.play()
+		try:
+			client.messages.create(body='Revisa la página!, si no ves nada nuevo, quizá se ha caído la red o algún problema con el Bot. Pero tranquila, se volverá a activar en 1 minuto.',
+						from_=TWILIO_WSP,
+						to=MY_WSP)
+		except:
+			print("Creo que se ha caído la conexión a internet D;")	
 		time.sleep(60)
 		continue
 
