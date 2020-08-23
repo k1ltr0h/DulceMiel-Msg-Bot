@@ -16,9 +16,9 @@ TWILIO_WSP = os.getenv("TWILIO_WSP")
 # las credenciales son leídas desde las variables de entorno TWILIO_ACCOUNT_SID y AUTH_TOKEN
 client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 # este es el número de testeo de Twilio sandbox sandboxtfrom_whatsapp_number='whatsapp:+14155238886'
-# reemplace este número con su numero personal de whastapp
-#to_whatsapp_number='whatsapp:+15005550006'
+# reemplace este número con su numero personal de whastapp, to_whatsapp_number='whatsapp:+15005550006'
 
+# Iniciar mixer
 mixer.init()
 dj = mixer.music
 #dj.load('Super_Mario_Land_Ending.mp3')
@@ -29,22 +29,32 @@ r = requests.get('https://www.dulcemiel.com')
 soup = BeautifulSoup(r.text, "html.parser")
 #print(soup.prettify())
 
+tmp_msj = "" #Evita que se re-envien los mensajes
+
 while True:
 	try:
-		time.sleep(5)
 		r = requests.get('https://www.dulcemiel.com')
 		soup = BeautifulSoup(r.text, "html.parser")
 		msg = soup.find("h2").string
 
 		if(msg) == "Abriendo pronto":
 			print(msg)
-		else:	
-			print("La pág se ha actualizado!!! o.o")
-			client.messages.create(body='Algo ha cambiado o.o, revisa la página!',
-                      from_=TWILIO_WSP,
-                      to=MY_WSP)
-			dj.load('Super_Mario_Land_Ending.mp3')
-			dj.play()
+		else:
+			open_shop = soup.find("div", class_="announcement--text font--accent").string
+			print(open_shop.split)
+			print("La pág se ha actualizado!!! o.o" + str(open_shop))
+			if open_shop != tmp_msj:
+				client.messages.create(body='Algo ha cambiado o.o, revisa la página! ' + str(open_shop),
+						from_=TWILIO_WSP,
+						to=MY_WSP)
+				if open_shop.split()[1] == "¡¡Pronto!!":
+					dj.load('were-ready-master_im-not-ready.mp3')
+					dj.play()
+				else:
+					dj.load('Super_Mario_Land_Ending.mp3')
+					dj.play()
+				tmp_msj = open_shop
+			time.sleep(5)
 	except:
 		print("Algo raro pasó o.o, revisa la pag! o presionaste Ctrl+c para salir e.e")
 		dj.load('were-ready-master_im-not-ready.mp3')
