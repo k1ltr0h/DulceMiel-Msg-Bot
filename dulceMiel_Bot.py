@@ -1,3 +1,4 @@
+# coding: utf-8
 import requests
 import time
 import os
@@ -13,16 +14,18 @@ TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 MY_WSP = os.getenv("MY_WSP")
 TWILIO_WSP = os.getenv("TWILIO_WSP")
 
-# las credenciales son leídas desde las variables de entorno TWILIO_ACCOUNT_SID y AUTH_TOKEN
+# las credenciales son leidas desde las variables de entorno TWILIO_ACCOUNT_SID y AUTH_TOKEN
 client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-# este es el número de testeo de Twilio sandbox sandboxtfrom_whatsapp_number='whatsapp:+14155238886'
-# reemplace este número con su numero personal de whastapp, to_whatsapp_number='whatsapp:+15005550006'
+# este es el numero de testeo de Twilio sandbox sandboxtfrom_whatsapp_number='whatsapp:+14155238886'
+# reemplace este numero con su numero personal de whastapp, to_whatsapp_number='whatsapp:+15005550006'
 
 # Iniciar mixer
-mixer.init()
-dj = mixer.music
+#mixer.init()
+#dj = mixer.music
 #dj.load('Super_Mario_Land_Ending.mp3')
 #wait = vlc.MediaPlayer("Super_Mario_Land_Ending.mp3")
+
+#print(dj.get_volume())
 
 r = requests.get('https://www.dulcemiel.com')
 #print(r.text)
@@ -32,41 +35,41 @@ soup = BeautifulSoup(r.text, "html.parser")
 tmp_msj = "" #Evita que se re-envien los mensajes
 
 while True:
-	try:
-		r = requests.get('https://www.dulcemiel.com')
-		soup = BeautifulSoup(r.text, "html.parser")
-		msg = soup.find("h2").string
-
-		if(msg) == "Abriendo pronto":
-			print(msg)
-		else:
-			open_shop = soup.find("div", class_="announcement--text font--accent").string
-			print(open_shop.split)
-			print("La pág se ha actualizado!!! o.o" + str(open_shop))
-			if open_shop != tmp_msj:
-				client.messages.create(body='Algo ha cambiado o.o, revisa la página! ' + str(open_shop),
-						from_=TWILIO_WSP,
-						to=MY_WSP)
-				if open_shop.split()[1] == "¡¡Pronto!!":
-					dj.load('were-ready-master_im-not-ready.mp3')
-					dj.play()
-				else:
-					dj.load('Super_Mario_Land_Ending.mp3')
-					dj.play()
-				tmp_msj = open_shop
-			time.sleep(5)
-	except:
-		print("Algo raro pasó o.o, revisa la pag! o presionaste Ctrl+c para salir e.e")
-		dj.load('were-ready-master_im-not-ready.mp3')
-		dj.play()
-		try:
-			client.messages.create(body='Revisa la página!, si no ves nada nuevo, quizá se ha caído la red o algún problema con el Bot. Pero tranquila, se volverá a activar en 1 minuto.',
-						from_=TWILIO_WSP,
-						to=MY_WSP)
-		except:
-			print("Creo que se ha caído la conexión a internet D;")	
-		time.sleep(60)
-		continue
+    try:
+        r = requests.get('https://www.dulcemiel.com')
+        soup = BeautifulSoup(r.text, "html.parser")
+        msg = soup.find("h2").string
+        if(msg) == "Abriendo pronto":
+            print(msg)
+            time.sleep(5)
+        else:
+            open_shop = soup.find("div", class_="announcement--text font--accent").string
+            #print(open_shop.split)
+            print("La pag se ha actualizado")
+            if open_shop != tmp_msj:
+                client.messages.create(body='Algo ha cambiado' + str(open_shop), from_=TWILIO_WSP, to=MY_WSP)
+                if open_shop.split()[1] == "¡¡Pronto!!":
+                    print("Revisa cumpa D;")
+                    #dj.load('were-ready-master_im-not-ready.mp3')
+                    #dj.play()
+                    os.system("omxplayer -o local were-ready-master_im-not-ready.mp3")
+                else:
+                    #dj.load('Super_Mario_Land_Ending.mp3')
+                    #dj.play()
+                    os.system("omxplayer -o local Super_Mario_Land_Ending.mp3")
+                tmp_msj = open_shop
+            time.sleep(5)
+    except:
+        print("Algo raro pasó o.o, revisa la pag! o presionaste Ctrl+c para salir e.e")
+        #dj.load('were-ready-master_im-not-ready.mp3')
+        #dj.play()
+        os.system("omxplayer -o local were-ready-master_im-not-ready.mp3")
+        try:
+            client.messages.create(body='Revisa, puede que no tengamos internet D;', from_=TWILIO_WSP, to=MY_WSP)
+        except:
+            print("Creo que se ha caído la conexión a internet D;")
+            time.sleep(60)
+            continue
 
 
 

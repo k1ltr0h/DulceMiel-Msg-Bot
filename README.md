@@ -1,4 +1,4 @@
-# DulceMiel-Bot
+# DulceMiel-Bot Linux version (raspbian)
 
 https://www.dulcemiel.com/
 
